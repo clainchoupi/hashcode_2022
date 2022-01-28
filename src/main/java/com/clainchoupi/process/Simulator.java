@@ -80,7 +80,7 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V4 : mettre tous les liked et enlever le plus disliké
+		//V5 : mettre tous les liked et enlever les 2 plus dislikés
 		Iterator<String> it = result.getAllLiked().iterator();
 		while (it.hasNext()) {
 			String ingredient = (String) it.next();
@@ -97,8 +97,9 @@ public class Simulator {
 		//System.out.println("Test = " +sortedDislikes);
 		
 		//Enlever le plus disliké
-		if(sortedDislikes.size() > 0) {
+		if(sortedDislikes.size() > 1) {
 			result.getIngredients().remove(sortedDislikes.keySet().toArray()[0]);
+			result.getIngredients().remove(sortedDislikes.keySet().toArray()[1]);
 		}
 
 	}
