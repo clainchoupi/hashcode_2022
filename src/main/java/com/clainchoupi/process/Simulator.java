@@ -69,12 +69,19 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V2 : mettre tous les liked
+		//V3 : mettre tous les liked et enlever les disliked
 		Iterator<String> it = result.getAllLiked().iterator();
 		while (it.hasNext()) {
 			String ingredient = (String) it.next();
-			result.addIngredient(ingredient);
+			result.getIngredients().add(ingredient);
 		}
+
+		it = result.getAllDisliked().iterator();
+		while (it.hasNext()) {
+			String ingredient = (String) it.next();
+			result.getIngredients().remove(ingredient);
+		}
+
 
 	}
 
