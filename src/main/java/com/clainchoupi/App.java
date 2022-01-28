@@ -17,7 +17,7 @@ public class App {
 			simulator.simulate();
 			simulator.printOutput();
 
-            break; //Permet de ne faire que le premier fichier
+            //break; //Permet de ne faire que le premier fichier
 		}
 	}
     

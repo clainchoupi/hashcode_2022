@@ -64,10 +64,8 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//Premier commit
-		result.addIngredient("Chips");
-		result.addIngredient("Soda");
-		result.addIngredient("Chips");
+		//V1 : mettre les ingredients du premier client dans le resultat
+		result.addIngredient(clients.getClients().get(0).getLikes().get(0));
 	}
 
 	public void printOutput () {
