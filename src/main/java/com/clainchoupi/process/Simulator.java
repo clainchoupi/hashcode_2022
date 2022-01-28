@@ -7,7 +7,12 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.clainchoupi.model.Client;
 import com.clainchoupi.model.Clients;
@@ -44,6 +49,7 @@ public class Simulator {
 				client.setNbLikes(Integer.parseInt(likes[0]));
 				likes = Arrays.copyOfRange(likes, 1, likes.length);
                 client.setLikes(likes);
+				//Ajoute uniquement un liked s'il n'est pas présent dans le HashSet
 				result.getAllLiked().addAll(Arrays.asList(likes));
 
 				//Lecture ligne suivante : Dislike
@@ -52,7 +58,11 @@ public class Simulator {
 				client.setNbDislikes(Integer.parseInt(dislikes[0]));
 				dislikes = Arrays.copyOfRange(dislikes, 1, dislikes.length);
                 client.setDisikes(dislikes);
+				//Ajoute uniquement un disliked s'il n'est pas présent dans le HashSet
 				result.getAllDisliked().addAll(Arrays.asList(dislikes));
+
+				//Ajoute tous les disliked pour faire un count ensuite
+				result.getListDisliked().addAll(Arrays.asList(dislikes));
 
 				//Ajout du client en cours
 				clients.addClient(client);
@@ -62,6 +72,7 @@ public class Simulator {
             //clients.printClients();
 			//System.out.println("Liked =" +result.getAllLiked());
 			//System.out.println("Disliked =" +result.getAllDisliked());
+			//System.out.println("All Disliked =" +result.getListDisliked());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,19 +80,26 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V3 : mettre tous les liked et enlever les disliked
+		//V4 : mettre tous les liked et enlever le plus disliké
 		Iterator<String> it = result.getAllLiked().iterator();
 		while (it.hasNext()) {
 			String ingredient = (String) it.next();
 			result.getIngredients().add(ingredient);
 		}
 
-		it = result.getAllDisliked().iterator();
-		while (it.hasNext()) {
-			String ingredient = (String) it.next();
-			result.getIngredients().remove(ingredient);
-		}
+		// Map des disliked groupée par nombre
+		Map<String, Long> collectDisliked = result.getListDisliked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+		
+		LinkedHashMap<String, Long> sortedDislikes = new LinkedHashMap<>();
+        collectDisliked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> sortedDislikes.put(x.getKey(), x.getValue()));
 
+		//System.out.println("Test = " +sortedDislikes);
+		
+		//Enlever le plus disliké
+		if(sortedDislikes.size() > 0) {
+			result.getIngredients().remove(sortedDislikes.keySet().toArray()[0]);
+		}
 
 	}
 

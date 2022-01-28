@@ -1,5 +1,7 @@
 package com.clainchoupi.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Result {
@@ -8,7 +10,11 @@ public class Result {
     HashSet<String> allLiked = new HashSet<String>();
     HashSet<String> allDisliked = new HashSet<String>();
 
-    
+    ArrayList<String> listDisliked = new ArrayList<String>();
+
+    public ArrayList<String> getListDisliked() {
+        return listDisliked;
+    }
 
     public HashSet<String> getIngredients() {
         return ingredients;
