@@ -4,7 +4,9 @@ import java.util.HashSet;
 
 public class Result {
 
-    private HashSet<String> ingredients = new HashSet<String>();;
+    HashSet<String> ingredients = new HashSet<String>();
+    HashSet<String> allLiked = new HashSet<String>();
+    HashSet<String> allDisliked = new HashSet<String>();
 
     public HashSet<String> getIngredients() {
         return ingredients;
@@ -16,6 +18,14 @@ public class Result {
 
     public void addIngredient(String ingredient) {
         ingredients.add(ingredient);
+    }
+
+    public HashSet<String> getAllLiked() {
+        return allLiked;
+    }
+
+    public HashSet<String> getAllDisliked() {
+        return allDisliked;
     }
     
 }

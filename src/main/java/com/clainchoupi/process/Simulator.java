@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import com.clainchoupi.model.Client;
 import com.clainchoupi.model.Clients;
@@ -43,6 +44,7 @@ public class Simulator {
 				client.setNbLikes(Integer.parseInt(likes[0]));
 				likes = Arrays.copyOfRange(likes, 1, likes.length);
                 client.setLikes(likes);
+				result.getAllLiked().addAll(Arrays.asList(likes));
 
 				//Lecture ligne suivante : Dislike
                 String lineDislikes = bufferedReader.readLine();
@@ -50,6 +52,7 @@ public class Simulator {
 				client.setNbDislikes(Integer.parseInt(dislikes[0]));
 				dislikes = Arrays.copyOfRange(dislikes, 1, dislikes.length);
                 client.setDisikes(dislikes);
+				result.getAllDisliked().addAll(Arrays.asList(dislikes));
 
 				//Ajout du client en cours
 				clients.addClient(client);
@@ -57,6 +60,8 @@ public class Simulator {
 
 			//Affiche que le mapping fonctionne bien
             //clients.printClients();
+			//System.out.println("Liked =" +result.getAllLiked());
+			//System.out.println("Disliked =" +result.getAllDisliked());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,8 +69,13 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V1 : mettre les ingredients du premier client dans le resultat
-		result.addIngredient(clients.getClients().get(0).getLikes().get(0));
+		//V2 : mettre tous les liked
+		Iterator<String> it = result.getAllLiked().iterator();
+		while (it.hasNext()) {
+			String ingredient = (String) it.next();
+			result.addIngredient(ingredient);
+		}
+
 	}
 
 	public void printOutput () {
