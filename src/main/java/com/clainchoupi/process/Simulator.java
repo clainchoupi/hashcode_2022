@@ -80,7 +80,7 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V6 : mettre tous les liked et enlever les ingrédients plus dislikés que likés
+		//V7 : mettre tous les liked et enlever les ingrédients plus ou autant dislikés que likés
 
 		//Dans tous les cas on ajoute tous les likes
 		Iterator<String> it = result.getAllLiked().iterator();
@@ -105,7 +105,7 @@ public class Simulator {
 		while(itDisliked.hasNext()) {
 			String ingredient = (String) itDisliked.next();
 			if (collectLiked.get(ingredient) != null) {
-				if (collectLiked.get(ingredient) < collectDisliked.get(ingredient)) {
+				if (collectLiked.get(ingredient) <= collectDisliked.get(ingredient)) {
 					result.getIngredients().remove(ingredient);
 				}
 			}
