@@ -21,6 +21,11 @@ public class Simulator {
 	private File file;
     private Clients clients = new Clients();
 	private Result result = new Result();
+	private LinkedHashMap<String, Long> sortedLikes = new LinkedHashMap<>();
+	private LinkedHashMap<String, Long> sortedDislikes = new LinkedHashMap<>();
+	private Map<String, Long> collectLiked;
+	private Map<String, Long> collectDisliked;
+
 
 	public Simulator (File file) {
 		this.file = file;
@@ -50,6 +55,8 @@ public class Simulator {
                 client.setLikes(likes);
 				//Ajoute uniquement un liked s'il n'est pas présent dans le HashSet
 				result.getAllLiked().addAll(Arrays.asList(likes));
+				//Ajoute tous les liked pour faire un count ensuite
+				result.getListLiked().addAll(Arrays.asList(likes));
 
 				//Lecture ligne suivante : Dislike
                 String lineDislikes = bufferedReader.readLine();
@@ -67,12 +74,6 @@ public class Simulator {
 				clients.addClient(client);
             }
 
-			//Affiche que le mapping fonctionne bien
-            //clients.printClients();
-			//System.out.println("Liked =" +result.getAllLiked());
-			//System.out.println("Disliked =" +result.getAllDisliked());
-			//System.out.println("All Disliked =" +result.getListDisliked());
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,10 +90,12 @@ public class Simulator {
 		}
 
 		// Map des disliked groupée par nombre
-		Map<String, Long> collectLiked = result.getListLiked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-		Map<String, Long> collectDisliked = result.getListDisliked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+		collectLiked = result.getListLiked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+		collectDisliked = result.getListDisliked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 		
-		LinkedHashMap<String, Long> sortedDislikes = new LinkedHashMap<>();
+		collectLiked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+				.forEachOrdered(x -> sortedLikes.put(x.getKey(), x.getValue()));
+
         collectDisliked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> sortedDislikes.put(x.getKey(), x.getValue()));
 
@@ -122,6 +125,24 @@ public class Simulator {
 			}
 			writer.print(resultString);
 			
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void printStats () {
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("src/main/resources/stats/"+file.getName() + ".stats", "UTF-8");
+			writer.println("Distinct liked : " +result.getAllLiked());
+			writer.println("Sorted Liked : " +sortedLikes);
+			writer.println("---------------------------------");
+			writer.println("Distinct Disliked : " +result.getAllDisliked());
+			writer.println("Sorted Disliked : " +sortedDislikes);
+
 			writer.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

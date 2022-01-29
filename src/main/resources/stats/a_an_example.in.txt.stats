@@ -1,0 +1,5 @@
+Distinct liked : [mushrooms, tomatoes, peppers, basil, cheese]
+Sorted Liked : {mushrooms=1, tomatoes=1, peppers=1, basil=1, cheese=1}
+---------------------------------
+Distinct Disliked : [pineapple, basil]
+Sorted Disliked : {pineapple=1, basil=1}

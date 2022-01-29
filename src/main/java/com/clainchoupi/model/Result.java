@@ -25,10 +25,12 @@ public class Result {
     }
 
     public HashSet<String> getAllLiked() {
+        //Distinct
         return allLiked;
     }
 
     public HashSet<String> getAllDisliked() {
+        //Distinct
         return allDisliked;
     }
     

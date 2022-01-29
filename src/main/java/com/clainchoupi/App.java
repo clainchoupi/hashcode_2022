@@ -16,6 +16,7 @@ public class App {
 			simulator.parseInput();
 			simulator.simulate();
 			simulator.printOutput();
+			simulator.printStats();
 
             //break; //Permet de ne faire que le premier fichier
 		}
