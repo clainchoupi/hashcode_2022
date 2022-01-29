@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.clainchoupi.model.Client;
 import com.clainchoupi.model.Clients;
@@ -80,7 +79,9 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V5 : mettre tous les liked et enlever les 2 plus dislikés
+		//V6 : mettre tous les liked et enlever les ingrédients plus dislikés que likés
+
+		//Dans tous les cas on ajoute tous les likes
 		Iterator<String> it = result.getAllLiked().iterator();
 		while (it.hasNext()) {
 			String ingredient = (String) it.next();
@@ -88,20 +89,24 @@ public class Simulator {
 		}
 
 		// Map des disliked groupée par nombre
+		Map<String, Long> collectLiked = result.getListLiked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 		Map<String, Long> collectDisliked = result.getListDisliked().stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 		
 		LinkedHashMap<String, Long> sortedDislikes = new LinkedHashMap<>();
         collectDisliked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> sortedDislikes.put(x.getKey(), x.getValue()));
 
-		//System.out.println("Test = " +sortedDislikes);
-		
-		//Enlever le plus disliké
-		if(sortedDislikes.size() > 1) {
-			result.getIngredients().remove(sortedDislikes.keySet().toArray()[0]);
-			result.getIngredients().remove(sortedDislikes.keySet().toArray()[1]);
+		//On enlève les ingrédients plus dislikés que likés
+		// Parcours des disliked groupés par nombre
+		Iterator<String> itDisliked = collectDisliked.keySet().iterator();
+		while(itDisliked.hasNext()) {
+			String ingredient = (String) itDisliked.next();
+			if (collectLiked.get(ingredient) != null) {
+				if (collectLiked.get(ingredient) < collectDisliked.get(ingredient)) {
+					result.getIngredients().remove(ingredient);
+				}
+			}
 		}
-
 	}
 
 	public void printOutput () {
