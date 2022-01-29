@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.clainchoupi.model.Client;
@@ -25,6 +26,7 @@ public class Simulator {
 	private LinkedHashMap<String, Long> sortedDislikes = new LinkedHashMap<>();
 	private Map<String, Long> collectLiked;
 	private Map<String, Long> collectDisliked;
+	private Integer nbClients = 0;
 
 
 	public Simulator (File file) {
@@ -40,7 +42,7 @@ public class Simulator {
 			String line = bufferedReader.readLine();
 
 			//Lire ligne 1
-            Integer nbClients = Integer.parseInt(line);
+            nbClients = Integer.parseInt(line);
             clients.setClientCount(nbClients);
 
 			//Par blocs de deux lignes, ajouter chaque client
@@ -80,7 +82,7 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V7 : mettre tous les liked et enlever les ingrédients plus ou autant dislikés que likés
+		//V8 : retirer les 20% d'ingredients plus disliked
 
 		//Dans tous les cas on ajoute tous les likes
 		Iterator<String> it = result.getAllLiked().iterator();
@@ -99,8 +101,25 @@ public class Simulator {
         collectDisliked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> sortedDislikes.put(x.getKey(), x.getValue()));
 
-		//On enlève les ingrédients plus dislikés que likés
-		// Parcours des disliked groupés par nombre
+		// On enlève les 20% plus dislikés que likés
+		Long cmpt=0L;
+		Integer i=0;
+		System.out.println("----");
+		Iterator<Entry<String, Long>> iter = sortedDislikes.entrySet().iterator();
+
+
+		while (cmpt<(result.getListDisliked().size()/5)){
+			Entry<String, Long> entry = iter.next();
+
+			System.out.println("Compteur ="+cmpt+" - "+entry.getKey()+" - "+entry.getValue());
+
+			result.getIngredients().remove(entry.getKey());
+			cmpt+= entry.getValue();
+			i++;
+		}
+
+
+
 		Iterator<String> itDisliked = collectDisliked.keySet().iterator();
 		while(itDisliked.hasNext()) {
 			String ingredient = (String) itDisliked.next();
@@ -137,7 +156,11 @@ public class Simulator {
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter("src/main/resources/stats/"+file.getName() + ".stats", "UTF-8");
-			writer.println("Distinct liked : " +result.getAllLiked());
+			writer.println("Nombre de clients : " + nbClients);
+			writer.println("Nombre d'ingrédients Liked: " + result.getListLiked().size());
+			writer.println("Nombre d'ingrédients Disliked: " + result.getListDisliked().size());
+			writer.println("---------------------------------");
+			writer.println("Distinct Liked : " +result.getAllLiked());
 			writer.println("Sorted Liked : " +sortedLikes);
 			writer.println("---------------------------------");
 			writer.println("Distinct Disliked : " +result.getAllDisliked());

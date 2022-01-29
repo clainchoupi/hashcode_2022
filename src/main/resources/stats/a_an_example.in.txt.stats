@@ -1,4 +1,8 @@
-Distinct liked : [mushrooms, tomatoes, peppers, basil, cheese]
+Nombre de clients : 3
+Nombre d'ingrédients Liked: 5
+Nombre d'ingrédients Disliked: 2
+---------------------------------
+Distinct Liked : [mushrooms, tomatoes, peppers, basil, cheese]
 Sorted Liked : {mushrooms=1, tomatoes=1, peppers=1, basil=1, cheese=1}
 ---------------------------------
 Distinct Disliked : [pineapple, basil]

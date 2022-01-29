@@ -1,4 +1,8 @@
-Distinct liked : [luncl, xveqd, dlust, akuof, vxglq, byyii]
+Nombre de clients : 5
+Nombre d'ingrédients Liked: 10
+Nombre d'ingrédients Disliked: 0
+---------------------------------
+Distinct Liked : [luncl, xveqd, dlust, akuof, vxglq, byyii]
 Sorted Liked : {dlust=3, luncl=2, akuof=2, xveqd=1, vxglq=1, byyii=1}
 ---------------------------------
 Distinct Disliked : []
