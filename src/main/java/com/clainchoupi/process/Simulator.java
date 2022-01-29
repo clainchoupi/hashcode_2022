@@ -82,8 +82,8 @@ public class Simulator {
 	}
 
 	public void simulate() {
-		//V8 : retirer les 20% d'ingredients plus disliked
-
+		//V10 : enlever les ingredients dislike une seule fois
+		
 		//Dans tous les cas on ajoute tous les likes
 		Iterator<String> it = result.getAllLiked().iterator();
 		while (it.hasNext()) {
@@ -101,34 +101,17 @@ public class Simulator {
         collectDisliked.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> sortedDislikes.put(x.getKey(), x.getValue()));
 
-		// On enlève les 20% plus dislikés que likés
-		Long cmpt=0L;
-		Integer i=0;
+		// On enlève ceux qui sont disliké une seule fois
 		System.out.println("----");
 		Iterator<Entry<String, Long>> iter = sortedDislikes.entrySet().iterator();
-
-
-		while (cmpt<(result.getListDisliked().size()/5)){
+		
+		while(iter.hasNext()){
 			Entry<String, Long> entry = iter.next();
-
-			System.out.println("Compteur ="+cmpt+" - "+entry.getKey()+" - "+entry.getValue());
-
-			result.getIngredients().remove(entry.getKey());
-			cmpt+= entry.getValue();
-			i++;
-		}
-
-
-
-		Iterator<String> itDisliked = collectDisliked.keySet().iterator();
-		while(itDisliked.hasNext()) {
-			String ingredient = (String) itDisliked.next();
-			if (collectLiked.get(ingredient) != null) {
-				if (collectLiked.get(ingredient) <= collectDisliked.get(ingredient)) {
-					result.getIngredients().remove(ingredient);
-				}
+			if(entry.getValue()==1){
+				result.getIngredients().remove(entry.getKey());
 			}
 		}
+
 	}
 
 	public void printOutput () {
@@ -158,7 +141,11 @@ public class Simulator {
 			writer = new PrintWriter("src/main/resources/stats/"+file.getName() + ".stats", "UTF-8");
 			writer.println("Nombre de clients : " + nbClients);
 			writer.println("Nombre d'ingrédients Liked: " + result.getListLiked().size());
+			writer.println("Nombre d'ingrédients Liked distincts: " + result.getAllLiked().size());
+
 			writer.println("Nombre d'ingrédients Disliked: " + result.getListDisliked().size());
+			writer.println("Nombre d'ingrédients Disliked distincts: " + result.getAllDisliked().size());
+
 			writer.println("---------------------------------");
 			writer.println("Distinct Liked : " +result.getAllLiked());
 			writer.println("Sorted Liked : " +sortedLikes);
